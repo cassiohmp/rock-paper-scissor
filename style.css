@@ -46,8 +46,7 @@ li {
 
 .img:active {
     transform: translateY(4px);
-    transform: 
-  }
+}
 
 #computer-choice {
     padding: 0.5em;
