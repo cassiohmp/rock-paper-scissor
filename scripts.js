@@ -1,4 +1,4 @@
-let choicesArray = ['rock', 'paper', 'scissors']
+let choicesArray = ['Rock', 'Paper', 'Scissors']
 let gameStarted = false
 
 let randomNum
@@ -7,15 +7,33 @@ let computerChoice
 let userScore = 0
 let computerScore = 0
 
-let buttons = document.querySelectorAll('.button')
-buttons.forEach(button => button.addEventListener('click', getUserChoice))
+startButton.addEventListener('click', e => {
+    gameStarted = true;
+    startButton.style.visibility = 'hidden'
+    computerChoiceParagraph.innerText = 'Nothing yet...'
+    userCounter.innerText = 'Your score: ' + userScore
+    computerCounter.innerText = "Computer's score: " + computerScore
+
+    if (gameStarted) {
+        images.forEach(img => {
+            img.addEventListener('click', getUserChoice)
+        })
+    }
+
+})
+
+//let buttons = document.querySelectorAll('.button')
+//buttons.forEach(button => button.addEventListener('click', getUserChoice))
+
+let images = document.querySelectorAll('.img')
+
 
 function getUserChoice() {
-    userChoice = this.innerText.toLowerCase()
+    userChoice = this.alt
     console.log('user: ' + userChoice)
 
     getComputerChoice();
-    console.log('computer: ' + computerChoice)
+    computerChoiceParagraph.innerText = computerChoice
     playTurn();
 }
 
@@ -24,56 +42,40 @@ function getComputerChoice() {
     computerChoice = choicesArray[randomNum]
 }
 
-
 function playTurn() {
-    if (!gameStarted) {
-        gameStarted = true
-    }
-
-    if (compareChoices() == 'user') {
+    if (userChoice == computerChoice) {
         userScore++
-    }
-    else if (compareChoices() == 'computer') {
         computerScore++
+    }
+    else if ((userChoice == 'Rock' && computerChoice == 'Scissors') ||
+        (userChoice == 'Paper' && computerChoice == 'Rock') ||
+        (userChoice == 'Scissors' && computerChoice == 'Paper')) {
+        userScore++
     }
     else {
-        userScore++
         computerScore++
-    }
-    console.log('userScore: ' + userScore)
-    console.log('computerScore: ' + computerScore)
 
+
+    }
+    userCounter.innerText = 'Your score: ' + userScore
+    computerCounter.innerText = "Computer's score: " + computerScore
     if (userScore == 5 || computerScore == 5) {
         endMatch()
     }
-    
-}
-
-function compareChoices() {
-    //draw
-    if (userChoice == computerChoice)
-    return
-
-    //user wins
-    else if( (userChoice == 'rock' && computerChoice == 'scissors') ||
-        (userChoice == 'paper' && computerChoice == 'rock') ||
-        (userChoice == 'scissors' && computerChoice == 'paper')) {
-            return 'user'
-        }
-    // computer wins    
-    else return 'computer'
 }
 
 function endMatch() {
     if (userScore == 5) {
-        resultParagraph.innerText = `You won!`
+        resultParagraph.innerText = `You win!`
     }
-    else resultParagraph.innerText = `You lost!`;
+    else resultParagraph.innerText = `You lose!`;
 
     userScore = 0;
     computerScore = 0;
     gameStarted = false;
-    buttons.forEach(button => {button.disabled = true})
+    images.forEach(image => { image.removeEventListener('click', getUserChoice)})
+    startButton.style.visibility = 'visible'
+    startButton.innerText = 'Play Again!'
 
 }
 
@@ -101,7 +103,7 @@ function endMatch() {
 
 // // Get computerChoice
 // function getComputerChoice(params) {
-//     let options = ['rock', 'paper', 'scissors']
+//     let options = ['Rock', 'paper', 'scissors']
 //     let computerChoice = options[Math.floor(Math.random() * 3)]
 //     console.log("Computer chose: " + computerChoice);
 //     return(computerChoice);
@@ -114,8 +116,8 @@ function endMatch() {
 //         return ("Tie!")
 //     }
 //     else if ((userChoice === "scissors" && computerChoice === "paper") ||
-//             (userChoice === "rock" && computerChoice === "scissors") ||
-//             (userChoice === "paper" && computerChoice === "rock")) {
+//             (userChoice === "Rock" && computerChoice === "scissors") ||
+//             (userChoice === "paper" && computerChoice === "Rock")) {
 //                 return (`${userChoice} beats ${computerChoice}. You win!`);}
 //     else {
 //         return (`${computerChoice} beats ${userChoice}. You lose!`);
